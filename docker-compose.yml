@@ -1,0 +1,26 @@
+version: "3"
+services:
+  db:
+    image: mongo:4.2-bionic
+    volumes:
+      - ./data:/data/db
+    ports:
+      - 27017:27017
+  backend:
+    build: jstoaws-backend
+    volumes:
+      - ./jstoaws-backend:/usr/src/app
+    ports:
+      - 5000:5000
+    depends_on:
+      - db
+    environment:
+      - MONGO_URI=mongodb://db:27017/todos
+  frontend:
+    build: jstoaws-frontend
+    # volumes:
+    #   - ./jstoaws-frontend:/usr/src/app
+    ports:
+      - 3000:3000
+    depends_on:
+      - backend
